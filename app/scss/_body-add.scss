@@ -1,0 +1,107 @@
+.contacts__form_add {
+	text-align: center; 
+}
+
+.contacts__form_add-main {
+	$inps-width: 200px;
+	$background: #eee;
+	
+	display: inline-block;
+	text-align: left;
+	
+	input[type=text], 
+	input[type=date], 
+	textarea,
+	select {
+		background: $background;
+		border: 1px solid #fff;
+		width: $inps-width;
+		padding: 3px;
+	}
+	
+	textarea {
+		height: 32px;
+		max-width: $inps-width;
+	}
+	
+	select {
+		width: $inps-width + 8;
+	}
+}
+
+.contacts__form_add-img {
+	@extend ._contacts__photo-base;
+	
+	position: relative;
+	width: 150px;
+	height: 150px;
+	overflow: hidden;
+	margin: 0 auto;
+	margin-bottom: 10px; 
+	overflow: hidden;
+	
+	&:hover {
+		.contacts__form_add-img-change {
+			bottom: 0;
+		}
+		.contacts__photo-clear {
+			top: 0;
+		}
+	}
+	
+}
+
+$control-show-speed: .5s;
+$control-bg: rgba(0,0,0,.7);
+._contact-photo-control {
+	position: absolute;
+	cursor: pointer;
+	user-select: none;
+	background: $control-bg;
+}
+
+.contacts__form_add-img-change {
+	@extend ._contact-photo-control;
+	$height: 26px;
+	
+	height: $height;
+	font-size: 12px;
+	text-align: center;
+	line-height: $height;
+	transition: bottom $control-show-speed;
+	left: 0; right: 0;
+	bottom: -$height;
+}
+
+.contacts__photo-clear {	
+	@extend ._contact-photo-control;
+	transition: top $control-show-speed;
+	top: -22px; right: 0;
+	
+	& > div {
+		@extend ._contacts__exit;
+		
+		content: '';
+		display: block;
+		background: $control-bg;
+		padding: 3px 3px;
+		
+		&:hover {
+			background: $control-bg!important;
+		}
+	}
+}
+
+.contacts__form_add-add {
+	padding: 5px 0;
+	display: block;
+	width: 150px;
+	margin: 0 auto;
+	margin-top: 15px;
+	cursor: pointer;
+}
+
+.contacts__load_img {
+	display: none;
+}
+

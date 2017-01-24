@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="ru">
+   <head>
+      <title>Contact List - списко контактов на Backbone</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta charset="utf-8">    
+      
+		<!-- build:js js/vendor.js -->
+			<!-- bower:js -->
+			<script defer src="bower_components/underscore/underscore.js"></script>
+			<script defer src="bower_components/jquery/dist/jquery.js"></script>
+			<script defer src="bower_components/backbone/backbone.js"></script>
+			<!-- endbower -->
+		<!-- endbuild -->
+		
+		<!-- build:js js/main.js -->
+      <script defer src="js/libs/backbone.localstorage.js"></script>
+      
+      <script defer src="js/app/functions.js"></script>      
+      <script defer src="js/app/init.js"></script>
+		
+		<script defer src="js/app/models/modal-window.js"></script>
+		<script defer src="js/app/models/contact.js"></script>
+		<script defer src="js/app/models/app-model.js"></script>
+		
+		<script defer src="js/app/collections/contacts.js"></script>
+		
+      <script defer src="js/app/views/modal-window.js"></script>
+      <script defer src="js/app/views/add-contact.js"></script>
+      <script defer src="js/app/views/info-contact.js"></script>
+      <script defer src="js/app/views/contacts-list.js"></script>
+		<script defer src="js/app/views/app-view.js"></script>
+		
+      <script defer src="js/app/routers/router.js"></script>
+     
+		<script defer src="js/app/main.js"></script>
+		<!-- endbuild -->		
+		
+		<!-- build:css css/vendor.css-->
+			<!-- bower:css -->
+			<link rel="stylesheet" href="bower_components/normalize-css/normalize.css" />
+			<!-- endbower -->
+		<!-- endbuild -->
+		
+		<!-- build:css css/main.css -->
+      <link type="text/css" rel="stylesheet" href="css/main.css">
+		<!-- endbuild -->
+   </head>
+   <body>
+	
+		<div class="contacts">
+			<header class="contacts__header">
+				<input type="text" class="contacts__search-text" placeholder="Поиск"/>
+				<button class="contacts__add" title="Добавить контакт">+</button>			
+			</header>
+			
+			<section class="contacts__body">
+				<ul class="contacts__list"></ul>
+				<div class="contacts__modals_container"></div>
+			</section>
+			
+			<footer class="contacts__footer"></footer>
+		</div>
+		
+		<!-- TEMPLATES -->
+		
+		<!-- Основа модального окна -->
+		<script type="text/template" id="tmpl-modal">
+			<div class="contacts__modal-bg"></div>
+			<div class="contacts__modal-main">
+				<div class="contacts__modal-header">
+					<div class="contacts__modal-title"><%= title %></div>
+					<div class="contacts__modal-exit"><div></div></div>
+				</div>
+				<div class="contacts__modal-body"></div>
+			</div>
+		</script>
+		
+		<!-- Форма добавления контакта -->
+		<script type="text/template" id="tmpl-add-contact">
+			<div class="contacts__form_add-main">
+			
+				<div class="contacts__form_add-img">
+					<div class="contacts__photo-clear" title="Очистить">
+						<div><div></div></div>
+					</div>
+					<label for="contacts__load_img-add" class="contacts__form_add-img-change" title="Изменить фотографию контакта">Изменить фотографию</label>
+				</div>
+				
+				<form class="contacts__add-form">
+					<table>
+						<tr>
+							<td><span class="contacts__require">Имя</span></td>
+							<td><input type="text" name="name" placeholder="Введите имя"></td>
+						</tr>
+						<tr>
+							<td>Skype</td>
+							<td><input type="text" name="skype" placeholder="Ник в Skype"></td>
+						</tr>
+						<tr>
+							<td>Телефон</td>
+							<td><textarea name="phoneNumbers" placeholder="Через запятую, если несколько"></textarea></td>
+						</tr>
+						<tr>
+							<td>E-mail</td>
+							<td><textarea name="email" placeholder="Через запятую, если несколько"></textarea></td>
+						</tr>
+						<tr>
+							<td>Соц. сеть</td>
+							<td><textarea name="social" placeholder="Через запятую, если несколько"></textarea></td>
+						</tr>
+						<tr>
+							<td>Дата рождения</td>
+							<td><input type="date" name="date"></td>
+						</tr>
+						<tr>
+							<td>Адрес</td>
+							<td><input name="address" type="text" placeholder="Введите адрес"></td>
+						</tr>
+						<tr>
+							<td>Комментарий</td>
+							<td><textarea name="comment" placeholder="Какя-нибудь дополнительная информация"></textarea></td>
+						</tr>
+					</table>
+					
+					<input type="file" accept="image/*" name="photoFile" id="contacts__load_img-add" class="contacts__load_img" />
+					
+					<input type="button" value="Добавить" class="contacts__form_add-add" />
+				</form>
+			</div>
+		</script>
+		
+		<!-- Форма редактирования контакта -->
+		<script type="text/template" id="tmpl-edit-contact">
+			<div class="contacts__form_add-main">
+			
+				<div class="contacts__form_add-img" style="background-image : url(<%= photoSrc %>)">
+					<div class="contacts__photo-clear" title="Очистить">
+						<div><div></div></div>
+					</div>
+					<label for="contacts__load_img-edit" class="contacts__form_add-img-change" title="Изменить фотографию контакта">Изменить фотографию</label>
+				</div>
+				
+				<form class="contacts__add-form">
+					<table>
+						<tr>
+							<td><span class="contacts__require">Имя</span></td>
+							<td><input type="text" name="name" placeholder="Введите имя" value="<%= name %>"></td>
+						</tr>
+						<tr>
+							<td>Skype</td>
+							<td><input type="text" name="skype" placeholder="Ник в Skype" value="<%= skype %>"></td>
+						</tr>
+						<tr>
+							<td>Телефон</td>
+							<td><textarea name="phoneNumbers" placeholder="Через запятую, если несколько"><%= phoneNumbers.join(",\n") %></textarea></td>
+						</tr>
+						<tr>
+							<td>E-mail</td>
+							<td><textarea name="email" placeholder="Через запятую, если несколько"><%= email.join(",\n") %></textarea></td>
+						</tr>
+						<tr>
+							<td>Социальная сеть</td>
+							<td><textarea name="social" placeholder="Через запятую, если несколько"><%= social.join(",\n") %></textarea></td>
+						</tr>
+						<tr>
+							<td>Дата рождения</td>
+							<td><input type="date" name="date" value="<%= date %>"></td>
+						</tr>
+						<tr>
+							<td>Адрес</td>
+							<td><input name="address" type="text" placeholder="Введите адрес"  value="<%= address %>"></td>
+						</tr>
+						<tr>
+							<td>Комментарий</td>
+							<td><textarea name="comment" placeholder="Какя-нибудь дополнительная информация"><%= comment %></textarea></td>
+						</tr>
+					</table>
+					
+					<input type="file" accept="image/*" name="photoFile" id="contacts__load_img-edit" class="contacts__load_img" />
+					
+					<input type="button" value="Редактировать" class="contacts__form_add-add" />
+				</form>
+			</div>
+		</script>
+		
+		<!-- Вывод информации о контакте -->
+		<script type="text/template" id="tmpl-info-contact">
+			<div class="contacts__info-main">
+			
+				<div class="contacts__info-img-container">
+					<div class="contacts__info-img" style="background-image : url(<%= photoSrc %>)"></div>
+					<input type="button" class="contacts__info-remove" value="Удалить контакт" title="Удалить контакт" />
+				</div>
+				
+				<div class="contacts__info-info">
+				
+				<h3 class="contacts__info-name">
+					<%= name %> 
+					<button class="contacts__info-edit" title="Редактировать">&#9998;</button>
+				</h3>
+					
+					<table class="contacts__info-table">
+					
+						<% if (skype) { %>
+							<tr>
+								<td>Skype:</td>
+								<td><a href="tel:<%= skype %>" title="tel:<%= skype %>"><%= skype %></a></td>
+							</tr>
+						<% } %>
+						
+						<%if (phoneNumbers && phoneNumbers[0]) { %>
+							<tr>
+								<td>Мобильный телефон:</td>
+								<td>
+									<% _.each(phoneNumbers, function(number) {  %>
+										<a href="tel:<%= number %>" title="tel:<%= number %>"><%= number %></a><br>
+									<% }); %>
+								</td>
+							</tr>
+						<% } %>
+						
+						<%if (email && email[0]) { %>
+							<tr>
+								<td>E-mail:</td>
+								<td>
+									<% _.each(email, function(item) {  %>
+										<a href="mailto:<%= item %>" title="mailto:<%= item %>"><%= item %></a><br>
+									<% }); %>
+								</td>
+							</tr>
+						<% } %>
+						
+						<%if (social && social[0]) { %>
+							<tr>
+								<td>Соц. сеть:</td>
+								<td>
+									<% _.each(social, function(item) {  %>
+										<a href="https://<%= item %>" target="_blank" title="https://<%= item %>"><%= item %></a><br>
+									<% }); %>
+								</td>
+							</tr>
+						<% } %>
+						
+						<%if (date) { %>
+							<% var d = new Date(date); %>
+							
+							<tr>
+								<td>Дата рождения:</td>
+								<td>								
+									<%= d.toLocaleString("ru", {year: "numeric", month: "long", day: "numeric"}) %> 
+									(<%= new Date((Date.now() - d)).getUTCFullYear() - 1970 %>)</td>
+							</tr>
+						<% } %>
+					</table>
+					
+					<%if (address) { %>
+						<div class="contacts__info-infoblock">
+							<p class="contacts__info-infoblock-title">Адрес:</p>
+							<p class="contacts__info-infoblock-text"><%= address %></p>
+						</div>
+					<% } %>
+					
+					<%if (comment) { %>
+						<div class="contacts__info-infoblock">
+							<p class="contacts__info-infoblock-title">Комментарий:</p>
+							<p class="contacts__info-infoblock-text"><%= comment %></p>
+						</div>
+					<% } %>
+				</div>
+			</div>
+		</script>
+
+		<!-- Вывод списка контактов -->
+		<script type="text/template" id="tmpl-contact-list">
+			<% _.each(config, function(group) { %>
+				
+				<div class="contacts__section" data-section-word="<%= group.word %>">
+					<div class="contacts__section-word"><%= group.word %></div>
+					<ul class="contacts__section-contacts">
+						<% _.each(group.contacts, function(contact) { %>
+							<li class="contacts__item" data-contact-id="<%= contact.id %>">
+									<div class="contacts__item-img" style="background-image : url(<%= contact.photoSrc %>)"></div>
+									<div class="contacts__item-name"><%= contact.name %></div>
+							</li>
+						<% }) %>
+					</ul>
+				</div>
+			
+			<% }) %>
+		</script>
+		
+		<!-- Футер -->
+		<script type="text/template" id="tmpl-footer">
+			<% if (show) { %>
+				<div class="contacts__states">
+					<div class="contacts__count_contats">
+						Показано контактов: <span><%= show %></span> (всего <span><%= all %></span>)
+					</div>
+				</div>
+			<% } %>
+		</script>
+		
+   </body>
+</html>

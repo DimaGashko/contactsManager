@@ -1,0 +1,116 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	background: #ddd;
+}
+
+/* - - - - Базовые стили элементов - - - - */
+._list-menu {
+	list-style: none;
+	padding-left: 0;
+	margin: 0;
+}
+
+/* Добавляет элементу стилизованный скорол (-webkit) */
+._style-scroll {
+	&::-webkit-scrollbar-track {
+		background-color: $BG_2;
+	}
+	&::-webkit-scrollbar-thumb {
+		background-color: $BG_3;
+		
+		&:hover{
+			background-color:#56999f;
+		}
+	} 
+	&::-webkit-scrollbar{
+		width: 4px;
+	}
+}
+
+._contacts__exit {
+	$exit-size: 16px;
+	
+	height: $exit-size; 
+	width: $exit-size;
+	position: absolute;
+	cursor: pointer;
+	right: 0; top: 0;
+	z-index: 999999;
+	padding: 3px 3px;
+	user-select: none;
+	transition: background .2s;
+
+	div {
+		position: relative;
+		height: 100%;
+		
+		&:before, &:after {
+			content: '';
+			width: 1px;
+			height: 100%;
+			background: $COLOR_1;
+			position: absolute;
+			left: 0; top: 0; 
+			margin-left: $exit-size / 2; 
+			display: block;
+			transition: background .2s;
+		}
+		
+		&:before {
+			transform: rotate(45deg);
+		}
+		
+		&:after {
+			transform: rotate(-45deg);
+		}
+	}
+		
+	&:hover {
+		background: red;
+	}
+}
+
+._contacts__photo-base {
+	width: 150px;
+	height: 150px;
+	border: 1px solid rbga(255,255,255,0.3);
+	background-image: url('../img/default.jpg');
+	background-size: cover; 
+	background-position: 50% 50%;
+	user-select: none;
+}
+
+/* - - - Глобальные стили - - - */
+.contacts {
+	
+	table  {
+		td {
+			padding-top: 5px;
+			padding-left: 20px;
+			
+			&:first-child {
+				padding-left: 0;
+				text-align: right;
+			}
+		}
+	}
+	
+}
+
+.contacts__require {
+	position: relative;
+	
+	&:after {
+		content: '*';
+		font-size: 12px;
+		position: absolute;
+		right: -5px;
+		top: -1px;
+	}
+}
+
+.contacts-error {
+	text-align: center;
+	color: #c00;
+}

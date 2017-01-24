@@ -1,0 +1,52 @@
+.contacts__section-word {
+	color: $COLOR_1;
+	background: $BG_3;
+	padding: 5px;
+	border-top: 1px solid $BG_2;
+	text-transform: uppercase;
+}
+
+.contacts__list {
+	@extend ._list-menu;
+}
+
+.contacts__section-contacts {
+	@extend ._list-menu;
+}
+
+.contacts__item {
+	background: $BG_1;
+	color: $COLOR_1;
+	border-top: 1px solid #434343;
+	padding: 2px;
+	padding-left: 4px;
+	cursor: pointer;
+	transition: background .2s;
+	
+	figure {
+		margin: 0;
+	}
+	
+	&:first-child {
+		border-top: none;
+	}
+	
+	&:hover {
+		background: #333;
+	}
+}
+
+.contacts__item-img {
+	@extend ._contacts__photo-base;
+	
+	width: 50px;
+	height: 50px;
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+.contacts__item-name {
+	display: inline;
+	vertical-align: middle;
+}

@@ -1,0 +1,53 @@
+/* Основа модального окна */
+.contacts__modal {
+	z-index: 999999;
+	display: none;	
+}
+
+.contacts__modal-bg {
+	position: fixed;
+	left: 0; top: 0; 
+	bottom: 0; right: 0;
+	background: rgba(0,0,0,.5); 
+	user-select: none;
+}
+
+.contacts__modal-main {
+	@extend ._style-scroll;
+	
+	width: 600px;
+	height: 400px;
+	
+	min-width: 100px;
+	min-height: 50px;
+	max-height: 100%;
+	max-width: 100%;
+	
+	position: fixed;
+	top: 0; right: 0;
+	left: 0; bottom: 0;
+	z-index: 99999999;
+	margin: auto;
+	background: $BG_1;
+	border: 1px solid #9e9e9e;
+	overflow: auto;
+}
+
+.contacts__modal-title {
+	font-size: 14px;
+	margin: 3px 5px;
+	color: #9e9e9e;
+	user-select: none;
+}
+
+.contacts__modal-exit {
+	@extend ._contacts__exit;
+
+	padding: 5px 10px;
+}
+
+.contacts__modal-body {
+	color: $COLOR_1;
+	font-size: 14px;
+	padding: 15px;
+}

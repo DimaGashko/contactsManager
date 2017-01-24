@@ -1,0 +1,124 @@
+.contacts__form_info {
+	text-align: center;
+}
+
+.contacts__info-main {
+	text-align: left;
+	display: inline-block;
+}
+
+.contacts__form_info-body {
+	padding: 0 20px;
+}
+
+.contacts__info-img-container {
+	display: inline-block;
+}
+
+.contacts__info-img {
+	@extend ._contacts__photo-base;
+	
+	width: 220px;
+	height: 220px;
+	
+}
+
+.contacts__info-info {
+	display: inline-block;
+	vertical-align: top;
+	width: 320px; 
+	margin-left: 15px;
+}
+
+._contacts__info-hr {
+	padding-bottom: 15px;
+	border-bottom: 2px solid rgb(200,200,200);
+}
+
+.contacts__info-name {
+	@extend ._contacts__info-hr;
+	
+	margin-top: 0;
+}
+
+.contacts__info-edit {
+	margin-left: 5px;
+	background: none;
+	border: none;
+	color: #fff;
+	cursor: pointer;
+	padding: 0;
+	font-size: 16px;
+	transition: color .3s; 
+	outline: none;
+	
+	&:hover {
+		color: red;
+	}
+	&:active {
+		color: #ddd;
+	}
+}
+
+.contacts__info-table {	
+	display: block;
+	
+	tr {
+		&:last-child {
+			@extend ._contacts__info-hr;
+		} 		
+	}
+	
+	td {
+		text-align: left!important;
+		vertical-align: top;
+		line-height: 1.8;
+		
+		a {			
+			&:link, &:visited {
+				color: #bbb;
+			}
+			&:hover {
+				color: $COLOR_1;
+			}
+		}
+	}
+}
+
+.contacts__info-infoblock {
+	margin-top: 15px;
+	
+	&:first-child {
+		margin-top: 0;
+	}
+}
+
+.contacts__info-infoblock-title {
+	color: #ddd;
+	font-size: 13px;
+	padding-bottom: 3px;
+	margin: 0;
+}
+ 
+.contacts__info-infoblock-text {
+	padding-top: 0;
+	padding-left: 3px;
+	margin: 0;
+}
+
+.contacts__info-remove {
+	color: #ddd;
+	font-size: 13px;
+	margin: 10px 0;
+	padding: 0;
+	border: none;
+	background: none;
+	cursor: pointer;
+	transition: color .3s;
+	outline: none;
+	width: 105px;
+	
+	&:hover {
+		color: red;
+	}
+}
