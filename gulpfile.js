@@ -48,7 +48,7 @@ gulp.task('bower', function() {
 });
 
 //build
-gulp.task('html', ['html', 'img']);
+gulp.task('build', ['html', 'img']);
 
 gulp.task('html', function() {
 	return gulp.src('app/*html')
